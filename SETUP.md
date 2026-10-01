@@ -28,7 +28,7 @@ the optional macOS Shortcuts, see [shortcuts/README.md](shortcuts/README.md).
 |---|---|
 | macOS | Uses `zsh`, `launchd` and `osascript`, all built in. Developed and tested on macOS 26. |
 | `jq` | The only dependency. macOS 15 Sequoia and later include it as `/usr/bin/jq`. Check with `command -v jq`. |
-| Folder location | Keep `ergo/` outside `~/Desktop`, `~/Documents`, `~/Downloads` and iCloud Drive, where macOS privacy protection can block background jobs. `~/Projects/ergo` works well. |
+| Folder location | Keep `ergo/` in your home folder (for example `~/ergo`), not in Desktop, Documents, Downloads or iCloud Drive, where macOS can block background jobs. |
 
 On older macOS without `jq`, download the macOS binary from <https://jqlang.org>,
 make it executable, and place it at `/usr/local/bin/jq`. ergo also looks in
@@ -36,37 +36,104 @@ make it executable, and place it at `/usr/local/bin/jq`. ergo also looks in
 
 ## 2. Install
 
-The `ergo/` folder is the project root; don't create another one.
+Installation takes about a minute: put the folder somewhere permanent, then run
+one command.
+
+### Step 1 — Get ergo
+
+Use either option, and place the folder at `~/ergo` (your home folder):
+
+- **Git:** `git clone <repository-url> ~/ergo`
+- **Download:** download the ZIP, double-click it to unzip, rename the folder to
+  `ergo`, and drag it into your home folder (in Finder, **Go → Home**).
+
+Then open **Terminal** (Applications → Utilities) and confirm `jq` is available:
 
 ```bash
-cd /path/to/ergo
+command -v jq
+```
+
+It should print a path such as `/usr/bin/jq`. If it prints nothing, see
+[Requirements](#1-requirements).
+
+### Step 2 — Run the installer
+
+```bash
+cd ~/ergo
 ```
 
 ```bash
-mkdir -p logs state shortcuts
+zsh ergo.sh --install
 ```
 
-```bash
-chmod +x ergo.sh
+Running it with `zsh` works even if the download didn't keep the file's
+executable permission; the installer restores it. You'll see:
+
+```text
+Installing ergo from /Users/you/ergo
+  ✓ ergo.sh is executable
+  ✓ Settings and cue library are valid (76 cues)
+  ✓ LaunchAgent written to /Users/you/Library/LaunchAgents/com.yourname.ergo.plist
+  ✓ Loaded: ergo now runs at login and checks every 5 minutes
+
+ergo is installed.
 ```
 
-```bash
-jq empty config.json && jq empty nudges.json
-```
+What the installer does:
+
+1. Checks that this is macOS and that `jq` is available.
+2. Validates `config.json` and `nudges.json`; it refuses to install an invalid
+   setup and names the problem.
+3. Makes `ergo.sh` executable and clears the "downloaded from the internet"
+   quarantine flag from the folder.
+4. Warns if the folder is in a location macOS protects from background jobs.
+5. Writes `~/Library/LaunchAgents/com.yourname.ergo.plist` with this folder's
+   absolute path, checks it with `plutil`, and loads it (replacing any earlier
+   copy).
+
+Running `--install` again is safe at any time.
+
+### Step 3 — Try it
 
 ```bash
 ./ergo.sh --test
 ```
 
-A break appears straight away. If it doesn't, see
-[Troubleshooting](#10-troubleshooting). `logs/` and `state/` are created
-automatically on first run.
+```bash
+./ergo.sh --configure
+```
 
-## 3. Run in the background (LaunchAgent)
+```bash
+./ergo.sh --status
+```
 
-The LaunchAgent starts ergo at login and wakes it every five minutes. From
-inside the `ergo` folder, this copies the template and fills in your real path
-(launchd needs absolute paths, without `~`):
+`--test` shows a real break immediately, `--configure` opens the settings
+window to set your hours, interval and break length, and `--status` should
+report `LaunchAgent: Loaded (com.yourname.ergo)`.
+
+### Step 4 — Allow the macOS prompts
+
+- **Background Items Added:** expected. The item may be listed as `zsh`. If
+  ergo never runs on schedule, allow it under **System Settings → General →
+  Login Items & Extensions**.
+- **Notifications** (only for the banner style and the fallback): allow
+  **Script Editor** under **System Settings → Notifications**.
+- **Shortcuts** (optional): to control ergo from the menu bar, follow
+  [shortcuts/README.md](shortcuts/README.md).
+
+### Moving or updating ergo
+
+- **Moved the folder?** Run `zsh ergo.sh --install` from the new location. The
+  LaunchAgent always points at the folder it was installed from.
+- **Updating?** Replace the program files (`ergo.sh`, `ui/`,
+  `com.yourname.ergo.plist`, the docs), keep your `config.json`, `nudges.json`,
+  `logs/` and `state/`, then run `zsh ergo.sh --install` again.
+
+### Manual installation (advanced)
+
+If you prefer to install the LaunchAgent yourself, run these from inside the
+`ergo` folder. launchd needs absolute paths without `~`, so the `sed` command
+fills in the real path:
 
 ```bash
 mkdir -p ~/Library/LaunchAgents
@@ -84,18 +151,11 @@ plutil -lint ~/Library/LaunchAgents/com.yourname.ergo.plist
 launchctl load ~/Library/LaunchAgents/com.yourname.ergo.plist
 ```
 
-```bash
-./ergo.sh --status
-```
+## 3. Run in the background (LaunchAgent)
 
-`LaunchAgent: Loaded (com.yourname.ergo)` confirms it. Prefer to edit by hand?
-Copy the plist with `cp com.yourname.ergo.plist ~/Library/LaunchAgents/` and
-replace every `/Users/YOUR_USERNAME/ACTUAL/PATH/TO/ergo` with the output of
-`pwd`.
-
-> On macOS 13 and later a "Background Items Added" notice is expected; the item
-> may be listed as `zsh`. If ergo never runs, allow it under **System Settings →
-> General → Login Items & Extensions**.
+`./ergo.sh --install` sets this up for you (see [Install](#2-install)). The
+LaunchAgent starts ergo at login and wakes it every five minutes; this section
+covers managing it directly.
 
 ### Managing the agent
 
@@ -316,10 +376,11 @@ Script Editor, run `display notification "hello"` once and approve. Also check
 Focus / Do Not Disturb.
 
 **launchd doesn't run ergo.**
-Check the plist has your real absolute path (no `YOUR_USERNAME`, no `~`) and
-passes `plutil -lint`; `launchctl list | grep com.yourname.ergo` shows it
-loaded with exit status `0`; background items are allowed; and `logs/ergo.err`
-is clean. Outside work hours or days, a silent exit is correct.
+First run `zsh ergo.sh --install` again from the folder; it regenerates and
+reloads the agent with the correct path. If it still doesn't run, check that
+`launchctl list | grep com.yourname.ergo` shows it loaded with exit status `0`,
+that background items are allowed, and that `logs/ergo.err` is clean. Outside
+work hours or days, a silent exit is correct.
 
 **It works manually but not under launchd.**
 launchd uses a minimal environment; ergo already finds its own folder and `jq`.
@@ -340,6 +401,16 @@ allow folder access if macOS asks. If ergo says a change "would make config.json
 invalid", nothing was saved and the message names the setting.
 
 ## 11. Uninstall
+
+From the `ergo` folder:
+
+```bash
+./ergo.sh --uninstall
+```
+
+This stops ergo and removes `~/Library/LaunchAgents/com.yourname.ergo.plist`.
+Your settings, cues and history stay in the folder. It works even if the
+settings are invalid or `jq` is missing. To do the same by hand:
 
 ```bash
 launchctl unload ~/Library/LaunchAgents/com.yourname.ergo.plist
@@ -371,6 +442,8 @@ ergo.sh --toggle           Pause or resume
 ergo.sh --set KEY VALUE    Change one setting, keeping everything else
 ergo.sh --reset-config     Restore default settings
 ergo.sh --configure        Open the settings window
+ergo.sh --install          Install and load the LaunchAgent for this folder
+ergo.sh --uninstall        Unload and remove the LaunchAgent (keeps your data)
 ergo.sh --help             Show help
 
 ergo.sh --status-json          Machine-readable status (used by the settings window)

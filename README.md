@@ -129,16 +129,37 @@ partially written file cannot occur. A lock prevents overlapping runs.
 
 ## Getting started
 
+### Installation
+
+**1. Get ergo** and place the folder in your home folder as `~/ergo` — either
+`git clone <repository-url> ~/ergo`, or download the ZIP, unzip it, and move the
+folder there. (Avoid Desktop, Documents, Downloads and iCloud Drive, where macOS
+can block background jobs.)
+
+**2. Run the installer** in Terminal:
+
 ```bash
-cd /path/to/ergo
-chmod +x ergo.sh
-./ergo.sh --test          # show a break immediately
-./ergo.sh --configure     # open the settings window
+cd ~/ergo
+zsh ergo.sh --install
 ```
 
-To run ergo automatically at login, install the included LaunchAgent. Complete
-instructions — installation, the LaunchAgent, configuration reference, Shortcuts,
-logs and troubleshooting — are in **[SETUP.md](SETUP.md)**.
+The installer validates your setup, makes the script executable, clears the
+download quarantine flag, and registers ergo to run at login — no manual path
+editing required. Running it again is always safe.
+
+**3. Try it:**
+
+```bash
+./ergo.sh --test          # show a break immediately
+./ergo.sh --configure     # set your hours, interval and break length
+```
+
+macOS will report a new background item (it may be listed as `zsh`); this is
+expected. To remove ergo later, run `./ergo.sh --uninstall` — your settings and
+history are kept.
+
+The full guide — step-by-step installation, configuration reference, Shortcuts,
+logs and troubleshooting — is in **[SETUP.md](SETUP.md)**.
 
 ### Requirements
 

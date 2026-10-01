@@ -17,6 +17,8 @@
 #   ergo.sh --set KEY VALUE    Change one setting (used by the Shortcuts)
 #   ergo.sh --reset-config     Restore default settings
 #   ergo.sh --configure        Open the fullscreen settings window (ui/)
+#   ergo.sh --install          Install and load the LaunchAgent for this folder
+#   ergo.sh --uninstall        Unload and remove the LaunchAgent (keeps your data)
 #   ergo.sh --help             Show help
 #
 # Requirements: macOS built-in tools plus jq.
@@ -37,6 +39,9 @@ LOCK_DIR="$STATE_DIR/.ergo.lock"
 UI_DIR="$PROJECT_DIR/ui"
 
 LAUNCHD_LABEL="com.yourname.ergo"
+PLIST_TEMPLATE="$PROJECT_DIR/com.yourname.ergo.plist"
+PLIST_PLACEHOLDER="/Users/YOUR_USERNAME/ACTUAL/PATH/TO/ergo"   # replaced by the real folder on --install
+LAUNCH_AGENTS_DIR="${ERGO_LAUNCH_AGENTS_DIR:-$HOME/Library/LaunchAgents}"
 SCHEDULE_GRACE_SECONDS=60   # absorbs launchd timing jitter so nudges don't drift by a whole poll
 CSV_HEADER="timestamp,title,cue_id,category,duration_seconds"
 
@@ -246,6 +251,8 @@ Usage:
   ergo.sh --set KEY VALUE    Change one setting, keeping everything else
   ergo.sh --reset-config     Restore default settings
   ergo.sh --configure        Open the fullscreen settings window
+  ergo.sh --install          Install and load the LaunchAgent for this folder
+  ergo.sh --uninstall        Unload and remove the LaunchAgent (keeps your data)
   ergo.sh --help             Show this help
 
 Used by the settings window and Shortcuts:
@@ -897,6 +904,86 @@ run_apply_config() {
   print_config_summary
 }
 
+# ─── Install / uninstall ──────────────────────────────────────────────────────
+# ERGO_SKIP_LAUNCHCTL=1 writes the plist without loading it (used for testing).
+
+xml_escape() { local s=${1//&/&amp;}; s=${s//</&lt;}; s=${s//>/&gt;}; print -r -- "$s"; }
+
+run_install() {
+  local target="$LAUNCH_AGENTS_DIR/$LAUNCHD_LABEL.plist" domain="gui/$(id -u)" content tmp
+  [[ $(uname -s) == Darwin ]] || die "ergo runs on macOS only."
+  [[ -f $PLIST_TEMPLATE ]] || die "LaunchAgent template not found: $PLIST_TEMPLATE"
+
+  print "Installing ergo from $PROJECT_DIR"
+  case $PROJECT_DIR in
+    "$HOME"/Desktop|"$HOME"/Desktop/*|"$HOME"/Documents|"$HOME"/Documents/*|"$HOME"/Downloads|"$HOME"/Downloads/*|"$HOME/Library/Mobile Documents"/*)
+      warn "this folder is inside Desktop, Documents, Downloads or iCloud Drive, where macOS can block background jobs. If breaks never appear on schedule, move the folder (for example to ~/ergo) and run --install again." ;;
+  esac
+
+  chmod +x "$SCRIPT_PATH"
+  xattr -dr com.apple.quarantine "$PROJECT_DIR" 2>/dev/null || true
+  print "  ✓ ergo.sh is executable"
+  print "  ✓ Settings and cue library are valid ($(jq length "$NUDGES_FILE") cues)"
+
+  # Fill the template with this folder's absolute path, XML-escaped, then verify it.
+  content=$(<"$PLIST_TEMPLATE")
+  [[ $content == *"$PLIST_PLACEHOLDER"* ]] \
+    || die "the LaunchAgent template no longer contains the placeholder path $PLIST_PLACEHOLDER; restore com.yourname.ergo.plist"
+  content=${content//"$PLIST_PLACEHOLDER"/$(xml_escape "$PROJECT_DIR")}
+  mkdir -p "$LAUNCH_AGENTS_DIR"
+  tmp=$(mktemp "$LAUNCH_AGENTS_DIR/.ergo.XXXXXX") || die "cannot write to $LAUNCH_AGENTS_DIR"
+  TEMP_FILES+=("$tmp")
+  print -r -- "$content" > "$tmp"
+  plutil -lint -s "$tmp" >/dev/null 2>&1 || die "the generated LaunchAgent is not a valid property list"
+  [[ $(plutil -extract ProgramArguments.1 raw -o - "$tmp") == "$PROJECT_DIR/ergo.sh" ]] \
+    || die "the generated LaunchAgent does not point at $PROJECT_DIR/ergo.sh"
+  chmod 644 "$tmp"
+  mv -f -- "$tmp" "$target"
+  print "  ✓ LaunchAgent written to $target"
+
+  if [[ -z ${ERGO_SKIP_LAUNCHCTL:-} ]]; then
+    launchctl bootout "$domain/$LAUNCHD_LABEL" >/dev/null 2>&1 || true   # replace any older copy
+    if ! launchctl bootstrap "$domain" "$target" >/dev/null 2>&1; then
+      launchctl load "$target" >/dev/null 2>&1 || die "launchctl could not load $target. Try: launchctl load \"$target\""
+    fi
+    print "  ✓ Loaded: ergo now runs at login and checks every 5 minutes"
+  fi
+
+  cat <<EOF
+
+ergo is installed.
+
+Next steps
+  ./ergo.sh --test         Show a break now
+  ./ergo.sh --configure    Choose your hours, interval and break length
+  ./ergo.sh --status       Confirm "LaunchAgent: Loaded"
+
+If macOS shows "Background Items Added", that's expected (it may be listed as zsh).
+EOF
+}
+
+run_uninstall() {
+  local target="$LAUNCH_AGENTS_DIR/$LAUNCHD_LABEL.plist" domain="gui/$(id -u)"
+  print "Uninstalling the ergo LaunchAgent"
+  if [[ -z ${ERGO_SKIP_LAUNCHCTL:-} ]]; then
+    launchctl bootout "$domain/$LAUNCHD_LABEL" >/dev/null 2>&1 \
+      || launchctl unload "$target" >/dev/null 2>&1 || true
+    print "  ✓ Stopped"
+  fi
+  if [[ -f $target ]]; then
+    rm -f -- "$target"
+    print "  ✓ Removed $target"
+  else
+    print "  · No LaunchAgent found at $target"
+  fi
+  cat <<EOF
+
+ergo will no longer run automatically. Your settings, cues and history are
+untouched in $PROJECT_DIR. Delete any "ergo: …" Shortcuts in the Shortcuts app,
+and remove the folder yourself if you no longer need it.
+EOF
+}
+
 run_reset_config() {
   write_json_atomic "$CONFIG_FILE" "$DEFAULT_CONFIG"
   print "ergo reset to defaults"
@@ -920,6 +1007,8 @@ main() {
     --configure)      mode=configure ;;
     --status-json)    mode=status_json ;;
     --apply-config)   mode=apply_config ;;
+    --install)        mode=install ;;
+    --uninstall)      mode=uninstall ;;
     --help|-h)        usage; exit 0 ;;
     *) print -u2 -r -- "ergo: unknown option: $1"; usage >&2; exit 2 ;;
   esac
@@ -931,6 +1020,9 @@ main() {
   elif (( $# > 1 )); then
     die "unexpected extra arguments after $1"
   fi
+
+  # Uninstalling must work even if jq or the settings are broken.
+  if [[ $mode == uninstall ]]; then run_uninstall; return; fi
 
   require_jq
   mkdir -p "$LOG_DIR" "$STATE_DIR"
@@ -958,6 +1050,7 @@ main() {
     reset_state)  run_reset_state ;;
     status_json)  run_status_json ;;
     configure)    run_configure ;;
+    install)      run_install ;;
   esac
 }
 

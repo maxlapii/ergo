@@ -1,10 +1,10 @@
 {
-  "last_nudge_epoch": 1790822561,
-  "last_cue_id": "tiny-victory-walk",
-  "last_category": "Walking",
+  "last_nudge_epoch": 1790867531,
+  "last_cue_id": "screen-to-sky",
+  "last_category": "Eyes",
   "recent_cues": [
-    "back-pocket-walk",
-    "reset-and-return",
-    "tiny-victory-walk"
+    "chin-glide",
+    "hallway-loop",
+    "screen-to-sky"
   ]
 }

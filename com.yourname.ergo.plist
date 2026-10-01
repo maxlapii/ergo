@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ergo LaunchAgent: com.yourname.ergo
+
+  launchd wakes ergo every 5 minutes (StartInterval 300). ergo itself decides
+  whether a nudge is due based on config.json, so changing the interval, hours,
+  or days never requires reloading this file.
+
+  1. Replace the placeholder paths below.
+     Every occurrence of /Users/YOUR_USERNAME/ACTUAL/PATH/TO/ergo must become the
+     absolute path of your existing ergo directory. Replace YOUR_USERNAME with your
+     macOS short user name (run: whoami). Do not use a tilde here; launchd needs
+     full absolute paths. From inside the ergo directory, this prints the path:
+         pwd
+
+  2. Install the plist:
+         mkdir -p ~/Library/LaunchAgents
+         cp com.yourname.ergo.plist ~/Library/LaunchAgents/
+
+  3. Load it (starts now, and at every login):
+         launchctl load ~/Library/LaunchAgents/com.yourname.ergo.plist
+
+  4. Start a run manually (optional):
+         launchctl start com.yourname.ergo
+
+  5. Check that it is loaded:
+         launchctl list | grep com.yourname.ergo
+
+  6. Unload it (stops ergo from running):
+         launchctl unload ~/Library/LaunchAgents/com.yourname.ergo.plist
+
+  After editing the installed plist, unload and load it again.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.yourname.ergo</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/YOUR_USERNAME/ACTUAL/PATH/TO/ergo/ergo.sh</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR_USERNAME/ACTUAL/PATH/TO/ergo/logs/ergo.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR_USERNAME/ACTUAL/PATH/TO/ergo/logs/ergo.err</string>
+</dict>
+</plist>

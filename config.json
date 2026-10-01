@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "interval_minutes": 45,
+  "work_start_hour": 8,
+  "work_end_hour": 18,
+  "work_days": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "sound": false,
+  "avoid_repeat_count": 3,
+  "quiet_mode": false,
+  "nudge_style": "fullscreen",
+  "break_min_seconds": 20,
+  "break_max_seconds": 60,
+  "log_file": "logs/nudges.csv",
+  "state_file": "state/state.json"
+}

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:;">
+<title>ergo Break</title>
+<style>
+  /* The native host draws a blurred, darkened copy of the desktop behind this page.
+     The page itself is transparent and always uses a dark palette for calm contrast. */
+  :root {
+    color-scheme: dark;
+    --text: #F4F6F6;
+    --text-2: rgba(244, 246, 246, 0.76);
+    --text-3: rgba(244, 246, 246, 0.52);
+    --accent: #3CCFB2;
+    --accent-2: #86EAD6;
+    --accent-ink: #03211B;
+    --btn: rgba(255, 255, 255, 0.10);
+    --btn-hover: rgba(255, 255, 255, 0.16);
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; background: transparent; }
+  body {
+    color: var(--text);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+  body.preview { background: linear-gradient(135deg, #20343F, #2B2A3D 60%, #1B2A2A); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus { outline: none; }
+  :focus-visible { outline: 3px solid rgba(134, 234, 214, 0.55); outline-offset: 3px; }
+
+  .veil { position: fixed; inset: 0; background: radial-gradient(1100px 760px at 50% 44%, rgba(14, 52, 46, 0.32), rgba(5, 9, 11, 0.60)); pointer-events: none; }
+
+  .stage { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 48px; }
+  .view { display: flex; flex-direction: column; align-items: center; text-align: center; transition: opacity 0.3s var(--ease), transform 0.3s var(--ease); }
+  body.leaving .view { opacity: 0; transform: scale(0.985); }
+
+  /* ── Cue text ───────────────────────────────────────── */
+  .category { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 12px; border-radius: 13px; background: rgba(60, 207, 178, 0.12); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-2); }
+  .category .dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+  .category .dur { color: var(--text-2); letter-spacing: 0.08em; }
+  h1 { margin: 16px 0 0; font-size: clamp(38px, 4.6vw, 62px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; text-wrap: balance; }
+  .body { margin: 14px 0 0; max-width: 32em; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: var(--text-2); text-wrap: balance; }
+
+  /* ── Countdown with a dashed progress line ──────────── */
+  .countdown { display: flex; flex-direction: column; align-items: center; margin-top: 40px; border: 0; padding: 8px 12px; background: transparent; border-radius: 14px; }
+  .time { display: flex; align-items: baseline; gap: 8px; }
+  .time b { font-size: 56px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; transition: color 0.3s; }
+  .time span { font-size: 13px; color: var(--text-3); }
+  /* Only the remaining time is drawn: one dash per step, deducted one whole dash at a
+     time from the right. Each deduction is a short GPU animation; slots never shift. */
+  .progress { display: flex; gap: 4px; width: 240px; height: 4px; margin-top: 18px; }
+  .progress i { flex: 1; border-radius: 2px; background: var(--accent); box-shadow: 0 0 6px rgba(60, 207, 178, 0.5);
+                transform-origin: left center; will-change: transform;
+                transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.3, 0, 0.2, 1), background 0.3s, box-shadow 0.3s; }
+  /* While counting, deductions are Web Animations, so CSS transforms must not ease them. */
+  .progress.live i { transition: background 0.3s, box-shadow 0.3s; }
+  .progress i.pre { opacity: 0; transform: scaleX(0.2); }
+  .countdown.paused .progress i { background: rgba(255, 255, 255, 0.45); box-shadow: none; }
+  .countdown.paused .time b { color: var(--text-2); }
+  .countdown.ending .progress i { background: var(--accent-2); }
+  .countdown.ending .time b { color: var(--accent-2); animation: beat 1s ease-in-out infinite; }
+  @keyframes beat { 50% { transform: scale(1.05); } }
+
+  /* ── Actions ────────────────────────────────────────── */
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 32px; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border: 0; border-radius: 9px; background: var(--btn); color: var(--text); font-size: 13px; font-weight: 600; transition: background 0.15s, transform 0.15s; }
+  .btn:hover { background: var(--btn-hover); }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 4px 14px rgba(60, 207, 178, 0.22); }
+  .btn-primary:hover { background: #5ADBC1; }
+  .btn-plain { background: transparent; color: var(--text-2); }
+  .btn-plain:hover { background: var(--btn); color: var(--text); }
+  kbd { font: 600 9.5px ui-monospace, "SF Mono", Menlo, monospace; padding: 1px 4px; border-radius: 4px; background: rgba(255, 255, 255, 0.12); color: inherit; opacity: 0.7; }
+  .btn-primary kbd { background: rgba(0, 0, 0, 0.12); }
+  .link { margin-top: 10px; border: 0; background: transparent; color: var(--accent-2); font-size: 12.5px; font-weight: 600; padding: 4px 8px; border-radius: 7px; }
+  .link:hover { background: var(--btn); }
+
+  /* ── Entrance ───────────────────────────────────────── */
+  body.intro .reveal { animation: up 0.7s var(--ease) backwards; }
+  body.intro .reveal:nth-child(2) { animation-delay: 0.06s; }
+  body.intro .reveal:nth-child(3) { animation-delay: 0.12s; }
+  body.intro .reveal:nth-child(4) { animation-delay: 0.20s; }
+  body.intro .reveal:nth-child(5) { animation-delay: 0.28s; }
+  @keyframes up { from { opacity: 0; transform: translateY(12px); } }
+
+  @media (max-height: 760px) {
+    .countdown { margin-top: 28px; }
+    .time b { font-size: 46px; }
+    .actions { margin-top: 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="veil" aria-hidden="true"></div>
+
+<div class="stage">
+  <main class="view" id="cueView">
+    <div class="category reveal"><span id="category"></span><span class="dot" id="durDot"></span><span class="dur" id="duration"></span></div>
+    <h1 class="reveal" id="title"></h1>
+    <p class="body reveal" id="body"></p>
+    <button class="countdown reveal" id="timer" title="Click to pause" aria-label="Timer. Click to pause or resume.">
+      <div class="time"><b id="time" role="timer"></b><span id="timeLabel">seconds left</span></div>
+      <div class="progress" id="progress" aria-hidden="true"></div>
+    </button>
+    <div class="actions reveal">
+      <button class="btn btn-primary" id="readyBtn">Yes, Ready <kbd>Space</kbd></button>
+      <button class="btn btn-plain" id="skipBtn">Skip <kbd>Esc</kbd></button>
+    </div>
+    <button class="link" id="routineBtn" hidden>Open the full routine ↗</button>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // The native host injects window.ERGO_BREAK. In a plain browser this page runs in preview mode.
+  var PREVIEW = {
+    cue: { id: "shoulder-rolls", title: "Shoulder Rolls", body: "Roll your shoulders up, back, and down a few times. Let them settle a little lower than before.", category: "Neck & Shoulders", duration_seconds: 15, routine_url: "" }
+  };
+  var native = !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ergo);
+  var D = window.ERGO_BREAK || PREVIEW;
+  if (!native) document.body.classList.add("preview");
+
+  var cue = D.cue, total = Math.max(0, Math.floor(cue.duration_seconds || 0));
+  var leftMs = total * 1000, paused = false, ticker = null, closed = false, anim = null;
+
+  function $(id) { return document.getElementById(id); }
+  function post(action, extra) {
+    var msg = Object.assign({ action: action }, extra || {});
+    if (native) window.webkit.messageHandlers.ergo.postMessage(JSON.stringify(msg));
+    else console.log("[preview]", msg);
+  }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function friendlyDuration(s) {
+    if (s < 60) return s + " sec";
+    return Math.floor(s / 60) + " min" + (s % 60 ? " " + (s % 60) + " sec" : "");
+  }
+
+  // ── Rendering ──────────────────────────────────────────────────────────
+  function render() {
+    $("category").textContent = cue.category;
+    $("duration").textContent = total ? friendlyDuration(total) : "";
+    $("durDot").hidden = !total;
+    $("title").textContent = cue.title;
+    $("body").textContent = cue.body;
+    $("timer").hidden = total === 0;
+    $("routineBtn").hidden = !/^https?:\/\//i.test(cue.routine_url || "");
+    renderTime();
+  }
+  function secondsLeft() { return Math.max(0, Math.ceil(leftMs / 1000)); }
+  var lastTimeKey = "";
+  function renderTime() {
+    var s = secondsLeft(), key = s + "|" + paused;
+    if (key === lastTimeKey) return;   // called every frame; only touch the DOM on change
+    lastTimeKey = key;
+    $("time").textContent = s >= 60 ? Math.floor(s / 60) + ":" + pad2(s % 60) : pad2(s);
+    $("timeLabel").textContent = paused ? "paused · click to resume" : (s === 1 ? "second left" : s >= 60 ? "left" : "seconds left");
+    $("timer").classList.toggle("paused", paused);
+    $("timer").classList.toggle("ending", !paused && s <= 3 && s > 0 && total > 3);
+  }
+
+  // ── Progress & timer ───────────────────────────────────────────────────
+  // One dash per second for breaks up to 30 s; longer breaks group seconds so the
+  // line never holds more than about 30 dashes.
+  var MAX_DASHES = 30;
+  var perDash = total > MAX_DASHES ? Math.ceil(total / MAX_DASHES) : 1;
+  var dashCount = total ? Math.ceil(total / perDash) : 0;
+  var dashes = [];
+  function buildDashes() {
+    var row = $("progress");
+    for (var i = 0; i < dashCount; i++) {
+      var d = document.createElement("i");
+      d.className = "pre";
+      row.appendChild(d);
+      dashes.push(d);
+    }
+  }
+  // Each step deducts one whole dash, rightmost first: at the moment a step ends, that
+  // dash plays a short exit animation (shrink toward its left edge and fade). The
+  // leftmost dash goes exactly as the timer reaches zero.
+  var DEDUCT_MS = 380;
+  var deducted = 0, exits = [];
+  function renderDashes(elapsedMs) {
+    var stepMs = total * 1000 / dashCount;
+    var due = Math.min(dashCount, Math.floor(elapsedMs / stepMs + 1e-6));
+    while (deducted < due) {
+      var d = dashes[dashCount - 1 - deducted];
+      var exit = d.animate(
+        [{ transform: "scaleX(1)", opacity: 1 }, { transform: "scaleX(0)", opacity: 0 }],
+        { duration: DEDUCT_MS, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" });
+      if (paused) exit.pause();
+      exits.push(exit);
+      deducted++;
+    }
+  }
+  // A silent Web Animation is the clock: the number and the dashes are read from it,
+  // and pausing it pauses everything together. Drawing follows the display's frame clock.
+  function run() {
+    if (!total) return;
+    $("progress").classList.add("live");
+    anim = $("progress").animate([{ opacity: 1 }, { opacity: 1 }], { duration: total * 1000, fill: "forwards" });
+    anim.onfinish = function () { leftMs = 0; renderDashes(total * 1000); renderTime(); post("chime"); close("completed"); };
+    ticker = setInterval(tick, 250);   // backup if frames are throttled
+    requestAnimationFrame(frame);
+    renderTime();
+  }
+  function frame() {
+    if (!anim || closed) return;
+    tick();
+    requestAnimationFrame(frame);
+  }
+  function tick() {
+    if (!anim) return;
+    var elapsed = anim.currentTime || 0;
+    leftMs = Math.max(0, total * 1000 - elapsed);
+    renderDashes(elapsed);
+    renderTime();
+  }
+  function togglePause() {
+    if (closed || !anim) return;
+    paused = !paused;
+    [anim].concat(exits).forEach(function (a) {
+      if (paused) a.pause(); else if (a.playState === "paused") a.play();
+    });
+    tick();
+  }
+
+  // ── Outcomes ───────────────────────────────────────────────────────────
+  function close(outcome) {
+    if (closed) return;
+    closed = true;
+    if (ticker) clearInterval(ticker);
+    if (anim) anim.pause();
+    document.body.classList.add("leaving");
+    post("finish", { outcome: outcome });
+    if (!native) setTimeout(restartPreview, 1200);   // preview mode: loop
+  }
+  function restartPreview() {
+    if (anim) { anim.cancel(); anim = null; }
+    $("progress").classList.remove("live");
+    exits.forEach(function (a) { a.cancel(); }); exits = []; deducted = 0;
+    dashes.forEach(function (d) { d.className = "pre"; d.style.transitionDelay = ""; d.style.transform = ""; d.style.opacity = ""; });
+    closed = false; paused = false; leftMs = total * 1000; lastTimeKey = "";
+    document.body.classList.remove("leaving", "intro");
+    void document.body.offsetWidth;
+    renderTime();
+    begin();
+  }
+  // Called by the host when the break times out with no interaction.
+  window.ergoTimeout = function () { close("timeout"); };
+
+  $("readyBtn").addEventListener("click", function () { close(total && leftMs === 0 ? "completed" : "ready"); });
+  $("skipBtn").addEventListener("click", function () { close("skipped"); });
+  $("timer").addEventListener("click", togglePause);
+  $("routineBtn").addEventListener("click", function () { post("openURL", { url: cue.routine_url }); });
+
+  document.addEventListener("keydown", function (ev) {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey || closed) return;
+    var k = ev.key;
+    if (k === " " || k === "Enter") { ev.preventDefault(); $("readyBtn").click(); }
+    else if (k === "Escape") { ev.preventDefault(); close("skipped"); }
+    else if (k.toLowerCase() === "p") { ev.preventDefault(); togglePause(); }
+  });
+
+  // ── Start ──────────────────────────────────────────────────────────────
+  buildDashes();
+  render();
+  function begin() {
+    document.body.classList.add("intro");
+    if (!total) return;
+    // Reveal the dashes one after another left to right, then start the countdown.
+    var stagger = Math.min(30, 600 / dashCount);
+    void $("progress").offsetWidth;
+    dashes.forEach(function (d, i) {
+      d.style.transitionDelay = (i * stagger) + "ms";
+      d.classList.remove("pre");
+    });
+    setTimeout(function () {
+      dashes.forEach(function (d) { d.style.transitionDelay = ""; });
+      if (!closed) run();
+    }, dashCount * stagger + 350);
+  }
+  // Start only once the break is actually on screen.
+  if (document.visibilityState === "visible" || !native) begin();
+  else document.addEventListener("visibilitychange", function once() {
+    if (document.visibilityState !== "visible") return;
+    document.removeEventListener("visibilitychange", once);
+    begin();
+  });
+})();
+</script>
+</body>
+</html>

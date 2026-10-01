@@ -1,0 +1,610 @@
+[
+  {
+    "id": "wake-up-march",
+    "title": "Wake-Up March",
+    "body": "Stand tall and march gently in place, lifting each knee comfortably. Let your arms swing naturally.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "desk-dance",
+    "title": "Desk Dance",
+    "body": "Stand up and sway, step side to side, and move your shoulders to an imaginary beat. No choreography needed.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "walk-the-thought",
+    "title": "Walk the Thought",
+    "body": "Take a slow lap around your room while thinking through whatever you were working on.",
+    "category": "Walking",
+    "duration_seconds": 90,
+    "routine_url": ""
+  },
+  {
+    "id": "window-walk",
+    "title": "Window Walk",
+    "body": "Walk over to a window, look outside for a moment, then take a few easy steps before heading back.",
+    "category": "Walking",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "hallway-loop",
+    "title": "Hallway Loop",
+    "body": "Leave your workspace and take one relaxed loop down the hallway or around the room.",
+    "category": "Walking",
+    "duration_seconds": 120,
+    "routine_url": ""
+  },
+  {
+    "id": "water-break-walk",
+    "title": "Water Break Walk",
+    "body": "Grab a glass or bottle of water and make the trip there and back without rushing.",
+    "category": "Walking",
+    "duration_seconds": 90,
+    "routine_url": ""
+  },
+  {
+    "id": "toe-to-heel-rock",
+    "title": "Toe-to-Heel Rock",
+    "body": "Stand comfortably and slowly shift your weight from heels toward toes and back again.",
+    "category": "Legs",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "mini-squat-reset",
+    "title": "Mini Squat Reset",
+    "body": "Stand with feet comfortable and bend your knees slightly, then rise tall. Repeat at an easy pace.",
+    "category": "Legs",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "calf-pump",
+    "title": "Calf Pump",
+    "body": "Rise onto your toes, pause briefly, and lower your heels with control. Keep the movement comfortable.",
+    "category": "Legs",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "leg-shakeout",
+    "title": "Leg Shakeout",
+    "body": "Stand up and gently shake out one leg at a time, then settle both feet firmly on the floor.",
+    "category": "Legs",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "knee-lift-pause",
+    "title": "Knee Lift Pause",
+    "body": "Lift one knee gently, lower it, then switch sides. Keep your torso tall and use support if helpful.",
+    "category": "Legs",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "side-step-reset",
+    "title": "Side-Step Reset",
+    "body": "Take a few comfortable steps to one side and back, then repeat in the other direction.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "step-touch",
+    "title": "Step & Touch",
+    "body": "Step gently to the side, bring your feet together, and alternate sides while letting your arms swing.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "march-and-reach",
+    "title": "March & Reach",
+    "body": "March slowly in place while reaching one arm overhead at a time.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "reach-and-release",
+    "title": "Reach & Release",
+    "body": "Reach both hands overhead, pause, then let your arms float back down. Repeat several times.",
+    "category": "Upper Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "wall-reach",
+    "title": "Wall Reach",
+    "body": "Stand near a wall and reach one hand upward, then the other. Let your ribs and shoulders move naturally.",
+    "category": "Upper Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "sky-to-floor",
+    "title": "Sky to Floor",
+    "body": "Reach toward the ceiling, then let your arms relax toward your sides. Repeat slowly and breathe easily.",
+    "category": "Upper Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "hug-yourself-reset",
+    "title": "Hug Yourself Reset",
+    "body": "Give yourself a gentle cross-body hug, switch which arm is on top, then open your arms wide.",
+    "category": "Upper Body",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "shoulder-sunrise",
+    "title": "Shoulder Sunrise",
+    "body": "Lift your shoulders toward your ears, roll them back, and let them drop. Repeat slowly.",
+    "category": "Neck & Shoulders",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "shoulder-drawers",
+    "title": "Shoulder Drawers",
+    "body": "Draw slow circles with your shoulders as if polishing two small circles in the air.",
+    "category": "Neck & Shoulders",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "ear-to-shoulder",
+    "title": "Ear to Shoulder",
+    "body": "Let one ear drift toward its shoulder, return to center, and switch sides. Keep your neck relaxed.",
+    "category": "Neck & Shoulders",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "look-left-look-right",
+    "title": "Look Left, Look Right",
+    "body": "Turn your head gently to look over one shoulder, return to center, and switch sides.",
+    "category": "Neck & Shoulders",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "chin-glide",
+    "title": "Chin Glide",
+    "body": "Sit or stand tall and gently draw your chin straight back, then relax. Keep your gaze level.",
+    "category": "Neck & Shoulders",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "chest-window",
+    "title": "Chest Window",
+    "body": "Open your arms wide as if making space for a big window, then relax them back down.",
+    "category": "Posture Reset",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "doorway-open",
+    "title": "Doorway Open",
+    "body": "Stand comfortably in a doorway and gently open your chest without forcing the stretch.",
+    "category": "Posture Reset",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "desk-to-tall",
+    "title": "Desk to Tall",
+    "body": "Start relaxed at your desk, stand up, lengthen through the crown of your head, then sit back down.",
+    "category": "Posture Reset",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "spine-wave",
+    "title": "Spine Wave",
+    "body": "While seated or standing, gently round your back and then return to a tall position in a smooth wave.",
+    "category": "Lower Back",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "seated-side-reach",
+    "title": "Seated Side Reach",
+    "body": "Sit tall, reach one arm overhead and gently lean to the opposite side. Switch sides slowly.",
+    "category": "Lower Back",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "standing-side-bend",
+    "title": "Standing Side Bend",
+    "body": "Stand tall and slide one hand gently down your leg while reaching the other arm upward. Switch sides.",
+    "category": "Lower Back",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "hip-figure-eight",
+    "title": "Hip Figure Eight",
+    "body": "Stand comfortably and draw small figure eights with your hips. Keep the movement smooth and easy.",
+    "category": "Hips",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "hip-shift",
+    "title": "Hip Shift",
+    "body": "Shift your weight gently from one hip to the other while keeping both feet grounded.",
+    "category": "Hips",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "standing-hip-open",
+    "title": "Standing Hip Open",
+    "body": "Lift one knee comfortably and move it slightly outward, then place your foot down and switch sides.",
+    "category": "Hips",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "chair-free-minute",
+    "title": "Chair-Free Minute",
+    "body": "Stay standing for one minute. Shift your weight, stretch your arms, and let your legs enjoy the change.",
+    "category": "Standing",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "stand-and-scan",
+    "title": "Stand & Scan",
+    "body": "Stand up and slowly look around your space. Notice three things you can see before sitting down.",
+    "category": "Standing",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "standing-weight-shift",
+    "title": "Standing Weight Shift",
+    "body": "Shift your weight forward, back, left, and right while keeping the movement small and controlled.",
+    "category": "Standing",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "balance-check",
+    "title": "Balance Check",
+    "body": "Stand near something stable and briefly shift your weight from one foot to the other.",
+    "category": "Standing",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "desk-side-stretch",
+    "title": "Desk-Side Stretch",
+    "body": "Stand beside your desk, reach one arm overhead, and gently lengthen through your side. Switch sides.",
+    "category": "Full Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "chair-back-push",
+    "title": "Chair-Back Push",
+    "body": "Place your hands on the back of a sturdy chair and gently step back to lengthen your arms and back.",
+    "category": "Full Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "wall-push-reset",
+    "title": "Wall Push Reset",
+    "body": "Face a wall and place your hands against it. Gently bend and straighten your elbows for a few easy repetitions.",
+    "category": "Upper Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "countertop-pause",
+    "title": "Countertop Pause",
+    "body": "Stand at a counter, place your hands down, and gently shift your weight forward and back.",
+    "category": "Upper Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "fist-to-fan",
+    "title": "Fist to Fan",
+    "body": "Slowly make soft fists, then spread your fingers wide like a fan. Repeat and relax your hands.",
+    "category": "Wrists & Hands",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "finger-piano",
+    "title": "Finger Piano",
+    "body": "Tap each fingertip gently against your thumb, moving through your fingers like playing a tiny piano.",
+    "category": "Wrists & Hands",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "prayer-to-press",
+    "title": "Prayer to Press",
+    "body": "Bring your palms together gently, hold for a moment, then release and shake your hands loose.",
+    "category": "Wrists & Hands",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "wrist-wave",
+    "title": "Wrist Wave",
+    "body": "Let your hands move slowly through a gentle wave, then circle both wrists in each direction.",
+    "category": "Wrists & Hands",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "far-focus",
+    "title": "Far Focus",
+    "body": "Look toward the farthest comfortable point in your space and let your eyes rest there for a moment.",
+    "category": "Eyes",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "eye-tour",
+    "title": "Eye Tour",
+    "body": "Look gently up, down, left, and right without moving your head. Finish by looking into the distance.",
+    "category": "Eyes",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "screen-to-sky",
+    "title": "Screen to Sky",
+    "body": "Lift your gaze away from the screen and look upward toward a distant point. Blink slowly and relax.",
+    "category": "Eyes",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "slow-blink-break",
+    "title": "Slow Blink Break",
+    "body": "Close your eyes softly for a moment, open them, and repeat a few slow, comfortable blinks.",
+    "category": "Eyes",
+    "duration_seconds": 20,
+    "routine_url": ""
+  },
+  {
+    "id": "three-breath-reset",
+    "title": "Three-Breath Reset",
+    "body": "Take three slow, comfortable breaths. Let each exhale soften your shoulders and hands.",
+    "category": "Breathing",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "long-exhale",
+    "title": "Long Exhale",
+    "body": "Breathe in comfortably, then let your breath out slowly. Repeat several times without forcing the pace.",
+    "category": "Breathing",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "breath-and-reach",
+    "title": "Breath & Reach",
+    "body": "Reach your arms overhead as you breathe in, then lower them as you breathe out.",
+    "category": "Breathing",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "reset-the-room",
+    "title": "Reset the Room",
+    "body": "Stand up and put away one small item, straighten one thing, then return to your workspace.",
+    "category": "Walking",
+    "duration_seconds": 90,
+    "routine_url": ""
+  },
+  {
+    "id": "posture-photo-pose",
+    "title": "Posture Photo Pose",
+    "body": "Stand as if someone is about to take your picture: feet grounded, shoulders relaxed, head tall. Hold briefly.",
+    "category": "Posture Reset",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "zip-up-posture",
+    "title": "Zip-Up Posture",
+    "body": "Imagine a zipper gently drawing you from your hips to the top of your head. Stand tall without stiffening.",
+    "category": "Posture Reset",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "crown-lift",
+    "title": "Crown Lift",
+    "body": "Imagine a string lifting the crown of your head upward while your shoulders stay relaxed.",
+    "category": "Posture Reset",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "sit-to-stand-flow",
+    "title": "Sit-to-Stand Flow",
+    "body": "Stand from your chair, pause tall, then sit back down with control. Repeat at a comfortable pace.",
+    "category": "Standing",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "stand-reach-walk",
+    "title": "Stand, Reach & Walk",
+    "body": "Stand up, reach overhead, then take a short walk around your space before returning.",
+    "category": "Full Body",
+    "duration_seconds": 90,
+    "routine_url": ""
+  },
+  {
+    "id": "one-minute-explore",
+    "title": "One-Minute Explore",
+    "body": "Walk somewhere you normally overlook. Take a few steps, look around, and return when your minute is up.",
+    "category": "Walking",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "back-pocket-walk",
+    "title": "Back-Pocket Walk",
+    "body": "Put your hands comfortably behind your back or at your sides and take a relaxed walk around the room.",
+    "category": "Walking",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "heel-to-toe-walk",
+    "title": "Heel-to-Toe Walk",
+    "body": "Take a few slow, comfortable steps, placing your heel down before your toes. Use support if needed.",
+    "category": "Walking",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "movement-snack",
+    "title": "Movement Snack",
+    "body": "Pick three moves you enjoy: a reach, a shoulder roll, and a few steps. Give each a little time.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "shake-the-day-off",
+    "title": "Shake the Day Off",
+    "body": "Stand up and gently shake out your hands, arms, shoulders, and legs. Finish with one deep breath.",
+    "category": "Full Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "robot-to-human",
+    "title": "Robot to Human",
+    "body": "Start stiff and still for a moment, then gradually loosen your shoulders, arms, hips, and legs.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "reset-your-footprint",
+    "title": "Reset Your Footprint",
+    "body": "Stand and notice how your feet meet the floor. Shift gently until you find a comfortable, balanced stance.",
+    "category": "Standing",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "floor-to-ceiling",
+    "title": "Floor to Ceiling",
+    "body": "Look down briefly, then lift your gaze and reach toward the ceiling. Return to neutral and repeat.",
+    "category": "Full Body",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "side-to-side-sway",
+    "title": "Side-to-Side Sway",
+    "body": "Stand comfortably and sway gently from side to side. Let your arms follow the movement.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "tiny-twist-flow",
+    "title": "Tiny Twist Flow",
+    "body": "Stand or sit tall and gently rotate your upper body left and right, keeping the movement relaxed.",
+    "category": "Lower Back",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "hip-back-rock",
+    "title": "Hip Back Rock",
+    "body": "With feet comfortable, gently shift your hips back and return to standing tall. Keep the range small.",
+    "category": "Hips",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "ankle-awakening",
+    "title": "Ankle Awakening",
+    "body": "Lift one heel, then the other, and finish with a few gentle ankle circles on each side.",
+    "category": "Legs",
+    "duration_seconds": 45,
+    "routine_url": ""
+  },
+  {
+    "id": "toe-spread",
+    "title": "Toe Spread",
+    "body": "While seated or standing, relax your feet and gently spread your toes before letting them soften again.",
+    "category": "Legs",
+    "duration_seconds": 30,
+    "routine_url": ""
+  },
+  {
+    "id": "desk-to-door",
+    "title": "Desk to Door",
+    "body": "Stand up and walk to the nearest doorway. Pause, take one relaxed breath, and walk back.",
+    "category": "Walking",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "movement-mix",
+    "title": "Movement Mix",
+    "body": "Combine a few shoulder rolls, a gentle reach, some marching, and a short walk. Keep everything easy.",
+    "category": "Full Body",
+    "duration_seconds": 90,
+    "routine_url": ""
+  },
+  {
+    "id": "reset-and-return",
+    "title": "Reset & Return",
+    "body": "Stand, stretch your arms, take a few steps, then return to your workspace with a fresh posture.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "the-two-minute-detour",
+    "title": "The Two-Minute Detour",
+    "body": "Take the scenic route to refill your water, check a window, or visit another room before returning.",
+    "category": "Walking",
+    "duration_seconds": 120,
+    "routine_url": ""
+  },
+  {
+    "id": "body-weather-check",
+    "title": "Body Weather Check",
+    "body": "Stand up and scan from head to feet. Notice where you feel tense, then give those areas a gentle movement.",
+    "category": "Full Body",
+    "duration_seconds": 60,
+    "routine_url": ""
+  },
+  {
+    "id": "tiny-victory-walk",
+    "title": "Tiny Victory Walk",
+    "body": "Stand up, take a short walk, and come back ready to tackle the next small thing on your list.",
+    "category": "Walking",
+    "duration_seconds": 60,
+    "routine_url": ""
+  }
+]
